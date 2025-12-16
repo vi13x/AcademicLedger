@@ -68,21 +68,6 @@ cmake --build build
 
 ## Структура проекта
 
-```
-AcademicLedger/
-├── main.cpp                 # Точка входа
-├── user.h/cpp              # Базовый класс пользователя
-├── datastore.h/cpp         # Хранилище данных
-├── mainwindow.h/cpp        # Главное окно
-├── logindialog.h/cpp       # Диалог входа
-├── registrationdialog.h/cpp # Диалог регистрации
-├── studentview.h/cpp       # Представление студента
-├── teacherview.h/cpp       # Представление преподавателя
-├── adminview.h/cpp         # Представление администратора
-├── init_demo_data.cpp      # Инициализация демо данных
-├── style.qss               # Стили интерфейса
-└── CMakeLists.txt          # Файл сборки
-```
 
 ## Решение проблем
 
@@ -101,4 +86,5 @@ AcademicLedger/
 ## Лицензия
 
 Проект создан на основе оригинального Academic Ledger с GitHub.
+
 

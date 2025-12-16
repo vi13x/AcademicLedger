@@ -1,21 +1,35 @@
-#pragma once
-#include <QWidget>
-#include <QString>
+#ifndef STUDENTVIEW_H
+#define STUDENTVIEW_H
 
-class QListWidget;
-class QTabWidget;
-class QPushButton;
+#include <QWidget>
+#include <QTabWidget>
+#include <QPushButton>
+#include <QTableWidget>
+#include <QLineEdit>
+#include <QStack>
 
 class StudentView : public QWidget {
-    Q_OBJECT
+Q_OBJECT
 public:
-    StudentView(const QString &username, QWidget *parent = nullptr);
+StudentView(const QString &username, QWidget *parent = nullptr);
+QStack<QWidget*> navigationStack;
+
 private slots:
-    void onLogout();
-    void onBack();
+void onLogout();
+void onBack();
+void onSearchGrades();
+void onExportGrades();
+void onShowStatistics();
+
 private:
-    QString username;
-    QTabWidget *tabs;
-    QPushButton *logoutBtn;
-    QPushButton *backBtn;
+void updateGradesTable();
+QString username;
+QTabWidget *tabs;
+QPushButton *logoutBtn;
+QPushButton *backBtn;
+QTableWidget *gradesTable;
+QLineEdit *searchEdit;
 };
+
+#endif // STUDENTVIEW_H
+

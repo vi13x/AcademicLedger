@@ -1,21 +1,22 @@
-#pragma once
-#include <QDialog>
+#ifndef LOGINDIALOG_H
+#define LOGINDIALOG_H
 
-class QLineEdit;
-class QLabel;
-class QPushButton;
+#include <QDialog>
+#include <QLineEdit>
 
 class LoginDialog : public QDialog {
-    Q_OBJECT
+Q_OBJECT
 public:
-    enum class Role { Student, TeacherOrAdmin };
-    LoginDialog(Role r, QWidget *parent = nullptr);
-
-    QString username() const;
-    QString password() const;
+enum Role { Student, TeacherOrAdmin };
+LoginDialog(Role role, QWidget *parent = nullptr);
+QString username() const;
+QString password() const;
 
 private:
-    QLineEdit *userEdit;
-    QLineEdit *passEdit;
-    Role role;
+Role role;
+QLineEdit *userEdit;
+QLineEdit *passEdit;
 };
+
+#endif // LOGINDIALOG_H
+

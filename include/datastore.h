@@ -1,54 +1,62 @@
-#pragma once
-#include "user.h"
+#ifndef DATASTORE_H
+#define DATASTORE_H
+
 #include <QString>
-#include <QVector>
-#include <QMap>
+#include <QDate>
+#include "user.h"
+#include "list.hpp"
 
 class DataStore {
 public:
-    DataStore();
+DataStore();
+QString studentsFile();
+QString teachersFile();
+QString adminsFile();
+QString scheduleFile();
+QString gradesFile();
+QString classesFile();
+QString disciplineMarksFile();
+QString homeworkFile();
+QString lessonTopicsFile();
+QString scheduleFileForClass(const QString &className);
 
-    // users
-    QVector<User> loadStudents();
-    bool addStudent(const User &u);
-    bool checkStudentCredentials(const QString &username, const QString &password);
-
-    bool checkTeacherCredentials(const QString &username, const QString &password);
-    bool checkAdminCredentials(const QString &username, const QString &password);
-
-    // teacher/admin files are plain: username:password per line
-    bool addTeacher(const QString &username, const QString &password);
-    bool removeTeacher(const QString &username);
-
-    bool addAdmin(const QString &username, const QString &password);
-    bool removeAdmin(const QString &username);
-
-    // schedule
-    QVector<QString> loadSchedule();
-    bool saveSchedule(const QVector<QString> &lines);
-
-    // grades
-    // grades file format: class|student|subject|date|grade
-    QVector<QString> loadGrades();
-    bool addGrade(const QString &className, const QString &student, const QString &subject, const QString &date, const QString &grade);
-    bool overwriteGrades(const QVector<QString> &lines);
-
-    // classes and students management
-    QVector<QString> getClasses();
-    QVector<QString> getStudentsForClass(const QString &className);
-    bool addStudentToClass(const QString &className, const QString &studentName);
-    bool removeStudentFromClass(const QString &className, const QString &studentName);
-    
-    // schedule generation
-    void generateDefaultSchedule();
-    QVector<QString> getSubjects();
-    QVector<QString> getTeachers();
+List<User> loadStudents();
+bool addStudent(const User &u, const QString &fullName = "", const QString &className = "");
+List<QString> getTeachers();
+QString getTeacherFullName(const QString &username);
+List<QString> getSubjects();
+List<QString> getStudentsForClass(const QString &className);
+List<QString> getClasses();
+List<QString> getAdmins();
+List<QString> getPeriods();
+List<QString> loadSchedule(const QString &className = "");
+List<QString> loadGrades();
+List<QString> loadHomework();
+bool checkStudentCredentials(const QString &username, const QString &password);
+bool checkTeacherCredentials(const QString &username, const QString &password);
+bool checkAdminCredentials(const QString &username, const QString &password);
+Map<QString, List<int>> loadGrades(const QString &studentLogin);
+List<QString> loadDisciplineMarks();
+bool addDisciplineMark(const QString &studentLogin, const QString &subject, const QString &mark, const QDate &date);
+bool addGrade(const QString &cls, const QString &st, const QString &subj, const QString &date, const QString &grade);
+bool overwriteGrades(const List<QString> &lines);
+bool addHomework(const QString &className, const QString &subject, const QString &date, const QString &text);
+bool addLessonTopic(const QString &className, const QString &subject, const QString &date, const QString &topic, const QString &teacherLogin);
+bool updateLessonTopic(const QString &className, const QString &subject, const QString &date, const QString &topic, const QString &teacherLogin);
+bool deleteLessonTopic(const QString &className, const QString &subject, const QString &date);
+QString getLessonTopic(const QString &className, const QString &subject, const QString &date);
+bool addTeacher(const QString &fullName, const QString &login, const QString &password, const QString &subject);
+bool removeTeacher(const QString &login);
+bool addAdmin(const QString &username, const QString &password);
+bool removeAdmin(const QString &login);
+bool saveSchedule(const List<QString> &lines, const QString &className);
+void generateDefaultSchedule();
+bool addStudentToClass(const QString &cls, const QString &fullName, const QString &login, const QString &password);
+bool removeStudentFromClass(const QString &cls, const QString &name);
 
 private:
-    QString studentsFile();
-    QString teachersFile();
-    QString adminsFile();
-    QString scheduleFile();
-    QString gradesFile();
-    QString classesFile();
+QString dataDir;
 };
+
+#endif // DATASTORE_H
+

@@ -1,33 +1,39 @@
-#include "../include/logindialog.h"
+#include "logindialog.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLineEdit>
 #include <QPushButton>
 
-LoginDialog::LoginDialog(Role r, QWidget *parent) : QDialog(parent), role(r) {
-    setWindowTitle(role==Role::Student ? "Вход (Ученик)" : "Вход (Учитель/Админ)");
-    setModal(true);
-    QVBoxLayout *v = new QVBoxLayout(this);
-    v->addWidget(new QLabel("Имя пользователя:"));
-    userEdit = new QLineEdit(this);
-    v->addWidget(userEdit);
 
-    v->addWidget(new QLabel("Пароль:"));
-    passEdit = new QLineEdit(this);
-    passEdit->setEchoMode(QLineEdit::Password);
-    v->addWidget(passEdit);
+LoginDialog::LoginDialog(Role r, QWidget *parent)
+: QDialog(parent), role(r)
+{
+setWindowTitle(role == Role::Student ? "Вход ученика" : "Вход учителя/админа");
 
-    QHBoxLayout *h = new QHBoxLayout();
-    QPushButton *ok = new QPushButton("Войти", this);
-    QPushButton *cancel = new QPushButton("Отмена", this);
-    h->addWidget(ok);
-    h->addWidget(cancel);
-    v->addLayout(h);
+QVBoxLayout *lay = new QVBoxLayout(this);
 
-    connect(ok, &QPushButton::clicked, this, &LoginDialog::accept);
-    connect(cancel, &QPushButton::clicked, this, &LoginDialog::reject);
+lay->addWidget(new QLabel("Логин:"));
+userEdit = new QLineEdit();
+lay->addWidget(userEdit);
+
+lay->addWidget(new QLabel("Пароль:"));
+passEdit = new QLineEdit();
+passEdit->setEchoMode(QLineEdit::Password);
+lay->addWidget(passEdit);
+
+QPushButton *ok = new QPushButton("Войти");
+QPushButton *cancel = new QPushButton("Отмена");
+
+connect(ok, &QPushButton::clicked, this, &LoginDialog::accept);
+connect(cancel, &QPushButton::clicked, this, &LoginDialog::reject);
+
+QHBoxLayout *btns = new QHBoxLayout();
+btns->addWidget(ok);
+btns->addWidget(cancel);
+
+lay->addLayout(btns);
 }
 
 QString LoginDialog::username() const { return userEdit->text().trimmed(); }
-QString LoginDialog::password() const { return passEdit->text(); }
+QString LoginDialog::password() const { return passEdit->text().trimmed(); }
+

@@ -1,35 +1,46 @@
-#include "../include/markdialog.h"
+#include "markdialog.h"
+#include "datastore.h"
 #include <QVBoxLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QComboBox>
-#include <QPushButton>
 #include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
 
-MarkDialog::MarkDialog(const QString &className, const QString &student, QWidget *parent) : QDialog(parent) {
-    setWindowTitle(QString("Поставить отметку — %1 / %2").arg(className, student));
-    QVBoxLayout *v = new QVBoxLayout(this);
-    v->addWidget(new QLabel("Предмет:"));
-    subjectEdit = new QLineEdit(this);
-    subjectEdit->setPlaceholderText("Например: Математика");
-    v->addWidget(subjectEdit);
 
-    v->addWidget(new QLabel("Оценка (2-10) или H:"));
-    gradeCombo = new QComboBox(this);
-    for (int i=2;i<=10;++i) gradeCombo->addItem(QString::number(i));
-    gradeCombo->addItem("H");
-    v->addWidget(gradeCombo);
+MarkDialog::MarkDialog(const QString &, const QString &, QWidget *parent)
+: QDialog(parent)
+{
+setWindowTitle("Выставление оценки");
 
-    QHBoxLayout *h = new QHBoxLayout();
-    QPushButton *ok = new QPushButton("Поставить", this);
-    QPushButton *cancel = new QPushButton("Отмена", this);
-    h->addWidget(ok);
-    h->addWidget(cancel);
-    v->addLayout(h);
+QVBoxLayout *lay = new QVBoxLayout(this);
 
-    connect(ok, &QPushButton::clicked, this, &MarkDialog::accept);
-    connect(cancel, &QPushButton::clicked, this, &MarkDialog::reject);
+lay->addWidget(new QLabel("Предмет:"));
+subjectEdit = new QLineEdit();
+// Добавляем подсказку с доступными предметами
+DataStore ds;
+auto subjects = ds.getSubjects();
+if (!subjects.isEmpty()) {
+subjectEdit->setPlaceholderText("Например: " + subjects.first());
+}
+lay->addWidget(subjectEdit);
+
+lay->addWidget(new QLabel("Оценка:"));
+gradeCombo = new QComboBox();
+gradeCombo->addItems({"5", "4", "3", "2"});
+lay->addWidget(gradeCombo);
+
+QPushButton *ok = new QPushButton("OK");
+QPushButton *cancel = new QPushButton("Отмена");
+
+connect(ok, &QPushButton::clicked, this, &MarkDialog::accept);
+connect(cancel, &QPushButton::clicked, this, &MarkDialog::reject);
+
+QHBoxLayout *h = new QHBoxLayout();
+h->addWidget(ok);
+h->addWidget(cancel);
+
+lay->addLayout(h);
 }
 
 QString MarkDialog::subject() const { return subjectEdit->text().trimmed(); }
 QString MarkDialog::grade() const { return gradeCombo->currentText(); }
+
